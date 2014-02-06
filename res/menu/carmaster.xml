@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<!-- 
+    	<group android:id="@+id/group2"><item android:id="@+id/action_settings" android:orderInCategory="100" android:showAsAction="never" android:title="@string/action_settings"></item></group>
+	<group android:id="@+id/group1" android:enabled="true" android:visible="true" android:menuCategory="container">
+		<item android:id="@+id/action_help" android:orderInCategory="100" android:showAsAction="never" android:title="@string/action_help"></item>
+		<item android:id="@+id/action_about" android:orderInCategory="100" android:showAsAction="never" android:title="@string/action_about"></item>
+	</group>
+	 -->
+</menu>
