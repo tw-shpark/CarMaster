@@ -5,6 +5,11 @@
 # files for the dex VM
 *.dex
 
+# Android native binary files
+*.so
+*.o
+*.o.d
+
 # Java class files
 *.class
 
