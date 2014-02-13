@@ -72,8 +72,9 @@ public class CarmasterPagerAdapter extends android.support.v4.app.FragmentStateP
 			
 			Bundle args = getArguments();
 			rootView = inflater.inflate(R.layout.fragment_textonly, container, false);
-			((TextView)rootView.findViewById(android.R.id.text1)).setText(Integer.toString(args.getInt(ARG_OBJECT)));
-			
+			((TextView) rootView.findViewById(android.R.id.text1))
+					.setText(Integer.toString(args.getInt(ARG_OBJECT)));
+
 			return rootView;
 		}
 	}
