@@ -7,9 +7,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.WindowManager;
 
 public class Carmaster extends FragmentActivity {
 
+	@Override
+	public void onResume(){
+		super.onResume();
+		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	final ActionBar actionBar = getActionBar();
