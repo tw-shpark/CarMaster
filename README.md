@@ -48,3 +48,18 @@ https://sourceforge.net/projects/opencvlibrary/files/opencv-android/2.4.8/OpenCV
 
 * NDK루트로부터 include디렉토리를 설정 (상대경로)
 * 프로젝트 경로로부터 OpenCV include디렉토리를 설정 (상대경로)
+
+Bugfix for Carmaster Project (OpenCV)
+-------------------------------------
+* OpenCV Library - 2.4.8 Project/src/org.opencv.android/JavaCameraView.java에서 
+
+JavaCameraView.java : Line 143
+```java
+  Size frameSize = calculateCameraFrameSize(sizes, new JavaCameraSizeAccessor(), width, height);
+  frameSize.width=640;
+  frameSize.height=480;
+                    
+  params.setPreviewFormat(ImageFormat.NV16); // for comus YCbCr NV21->NV16
+  Log.d(TAG, "Set preview size to " + Integer.valueOf((int)frameSize.width) + "x" + Integer.valueOf((int)frameSize.height));
+  params.setPreviewSize((int)frameSize.width, (int)frameSize.height);
+```
