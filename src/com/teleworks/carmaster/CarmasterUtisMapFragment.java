@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-public class CarmasterUtisFragment extends Fragment implements
+public class CarmasterUtisMapFragment extends Fragment implements
 		MapView.OpenAPIKeyAuthenticationResultListener,
 		MapView.MapViewEventListener, MapView.CurrentLocationEventListener,
 		MapView.POIItemEventListener/*
