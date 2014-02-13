@@ -13,5 +13,10 @@
         android:text="@string/title_videoInfo"
         android:textSize="20sp"
         android:textStyle="bold" />
+    
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/OpenCvCameraView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
