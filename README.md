@@ -63,3 +63,10 @@ JavaCameraView.java : Line 143
   Log.d(TAG, "Set preview size to " + Integer.valueOf((int)frameSize.width) + "x" + Integer.valueOf((int)frameSize.height));
   params.setPreviewSize((int)frameSize.width, (int)frameSize.height);
 ```
+
+JavaCameraView.java
+```java
+  int size = (mFrameWidth+160) * (mFrameHeight+45);
+  size  = size * ImageFormat.getBitsPerPixel(params.getPreviewFormat()) / 8;
+  mBuffer = new byte[size];
+```
