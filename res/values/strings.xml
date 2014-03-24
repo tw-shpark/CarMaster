@@ -1,12 +1,11 @@
-
 <resources>
 
     <string name="app_name">Carmaster</string>
-    
-    <string name="title_utisInfo">교통정보</string>
+    <string name="title_utisInfo">UTIS 교통정보</string>
+    <string name="text_utis_message">안전 운전 하세요.</string>
     <string name="title_carInfo">운행정보</string>
     <string name="title_videoInfo">영상정보</string>
     <string name="title_emergency">응급호출</string>
     <string name="title_settings">설정</string>
-    
+
 </resources>
