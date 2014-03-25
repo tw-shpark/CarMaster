@@ -84,7 +84,7 @@ public class CarmasterUtisFragment extends Fragment {
 
 	private static final byte eid_multimedia = (byte) 0xFA;
 	private static final byte eid_visibleString = (byte) 0xFB;
-
+	private static byte[] obe_id = new byte[8];
 	private static Thread sockThread = null;
 
 	@Override
@@ -121,19 +121,19 @@ public class CarmasterUtisFragment extends Fragment {
 
 		mCCTV_img = (ImageView) rootView.findViewById(R.id.img_cctv);
 
-		if (null == sockThread) {
-			sockThread = new Thread(new SocketListener(20000));
-			sockThread.start();
-		} else {
-			sockThread.interrupt();
-			sockThread = new Thread(new SocketListener(CNS_UDP_RX_PORT));
-			sockThread.start();
-			// new Thread(new UDP_Tx(true, serverIp, "0801", "0000", "0040",
-			// new String[] { "F64100" })).start();
-			tx_to_obe(true, serverIp, "0801", "0000", "0040",
-					new String[] { "F64100" });
-		}
-		// new Thread(new SocketListener(20000)).start();
+		// if (null == sockThread) {
+		// sockThread = new Thread(new SocketListener(20000));
+		// sockThread.start();
+		// } else {
+		// sockThread.interrupt();
+		// sockThread = new Thread(new SocketListener(CNS_UDP_RX_PORT));
+		// sockThread.start();
+		// new Thread(new UDP_Tx(true, serverIp, "0801", "0000", "0040",
+		// new String[] { "F64100" })).start();
+		// tx_to_obe(true, serverIp, "0801", "0000", "0040",
+		// new String[] { "F64100" });
+		// }
+		new Thread(new SocketListener(CNS_UDP_RX_PORT)).start();
 
 		mButton = (Button) rootView.findViewById(R.id.btn_0);
 		mButton.setOnClickListener(new OnClickListener() {
@@ -182,8 +182,10 @@ public class CarmasterUtisFragment extends Fragment {
 		mButton = (Button) rootView.findViewById(R.id.btn_4);
 		mButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+
+				String s_obe_id = byteToHexString_noSpace(obe_id, 8);
 				new Thread(new UDP_Tx(true, serverIp, "7001", "2002", "00C2",
-						new String[] { "00480100000040000000",
+						new String[] { "0048" + s_obe_id,
 								"01480000000000000000", "0A4400000000",
 								"074400000000", "0C420004",
 								"FB4954656C65776F726B73" })).start();
@@ -242,8 +244,8 @@ public class CarmasterUtisFragment extends Fragment {
 				try {
 					if (null == socket_reciever) {
 						Log.d("UDP Rx", "new DatagramSocket");
-						socket_reciever = new DatagramSocket(rx_port);
-						socket_reciever.setSoTimeout(1000);
+						socket_reciever = new DatagramSocket(CNS_UDP_RX_PORT);
+						socket_reciever.setSoTimeout(2000);
 					}
 					rx_packet = new DatagramPacket(buf, buf.length);
 					socket_reciever.receive(rx_packet);
@@ -287,6 +289,14 @@ public class CarmasterUtisFragment extends Fragment {
 		String result = "";
 		for (int i = 0; i < len; i++) {
 			result += String.format("%02X ", bytebuf[i]);
+		}
+		return result;
+	}
+
+	public static String byteToHexString_noSpace(byte[] bytebuf, int len) {
+		String result = "";
+		for (int i = 0; i < len; i++) {
+			result += String.format("%02X", bytebuf[i]);
 		}
 		return result;
 	}
@@ -393,11 +403,19 @@ public class CarmasterUtisFragment extends Fragment {
 				// rx_obe_data(temp, temp.length);
 				// }
 
+				// set info
 				if (70 < temp.length && temp[47] == 0x09) {
+					System.arraycopy(temp, 39, obe_id, 0, 8);
+
 					int portno = Byte2ToInt(temp[68], temp[69]);
 					if (CNS_UDP_RX_PORT != portno) {
-						mMainHandler.obtainMessage(SET_TEXT_STATUS, -1, -1,
-								"UDP RECIEVE PORT : " + CNS_UDP_RX_PORT)
+						mMainHandler.obtainMessage(
+								SET_TEXT_STATUS,
+								-1,
+								-1,
+								"UDP RECIEVE PORT : " + CNS_UDP_RX_PORT
+										+ " OBE ID : "
+										+ byteToHexString_noSpace(obe_id, 8))
 								.sendToTarget();
 						CNS_UDP_RX_PORT = portno;
 					}
@@ -532,18 +550,27 @@ public class CarmasterUtisFragment extends Fragment {
 			System.arraycopy(packet_udp.getData(), 0, temp, 0,
 					packet_udp.getLength());
 
-			if ((byte) 0x55 == temp[0] && (byte) 0x54 == temp[1]
-					&& (byte) 0x49 == temp[2] && (byte) 0x53 == temp[3]) {
-				rx_obe_data(temp, temp.length);
-			}
+			// if ((byte) 0x55 == temp[0] && (byte) 0x54 == temp[1]
+			// && (byte) 0x49 == temp[2] && (byte) 0x53 == temp[3]) {
+			// rx_obe_data(temp, temp.length);
+			// }
 
+			// set info
 			if (70 < temp.length && temp[47] == 0x09) {
+				System.arraycopy(temp, 39, obe_id, 0, 8);
+
 				int portno = Byte2ToInt(temp[68], temp[69]);
 				if (CNS_UDP_RX_PORT != portno) {
+					mMainHandler.obtainMessage(
+							SET_TEXT_STATUS,
+							-1,
+							-1,
+							"UDP RECIEVE PORT : " + CNS_UDP_RX_PORT
+									+ " OBE ID : "
+									+ byteToHexString_noSpace(obe_id, 8))
+							.sendToTarget();
 					CNS_UDP_RX_PORT = portno;
 				}
-				mMainHandler.obtainMessage(SET_TEXT_STATUS, -1, -1,
-						"UDP RECIEVE PORT : " + CNS_UDP_RX_PORT).sendToTarget();
 			}
 
 			// s = byteToHexString(temp, temp.length);
@@ -567,9 +594,6 @@ public class CarmasterUtisFragment extends Fragment {
 		int headerLen = data_in[HDR_LEN_1];
 		int totLen = Byte4ToInt(data_in[TOT_LEN_4], data_in[TOT_LEN_4 + 1],
 				data_in[TOT_LEN_4 + 2], data_in[TOT_LEN_4 + 3]);
-		int req_pkt_id = Byte4ToInt(data_in[REQ_PKT_ID_4],
-				data_in[REQ_PKT_ID_4 + 1], data_in[REQ_PKT_ID_4 + 2],
-				data_in[REQ_PKT_ID_4 + 3]);
 
 		String s;
 		if (100 > len)
@@ -589,6 +613,9 @@ public class CarmasterUtisFragment extends Fragment {
 
 		} else if ((byte) 0x01 == (data_in[CODE_2 + 1] & (byte) 0x01)) {
 			// have payload
+			int req_pkt_id = Byte4ToInt(data_in[REQ_PKT_ID_4],
+					data_in[REQ_PKT_ID_4 + 1], data_in[REQ_PKT_ID_4 + 2],
+					data_in[REQ_PKT_ID_4 + 3]);
 
 			int fragmentLen = Byte2ToInt(data_in[FRAG_PLEN_2],
 					data_in[FRAG_PLEN_2 + 1]);
@@ -597,22 +624,12 @@ public class CarmasterUtisFragment extends Fragment {
 					data_in[MORE_OFFSET_4 + 1], data_in[MORE_OFFSET_4 + 2],
 					data_in[MORE_OFFSET_4 + 3]);
 
-			// Print Rx data
-			// String s;
-			// if (100 > len)
-			// s = byteToHexString(data_in, len);
-			// else
-			// s = byteToHexString(data_in, 100);
-			// mMainHandler.obtainMessage(SET_TEXT_CONSOLE_BC, -1, -1,
-			// len + " bytes \n" + s).sendToTarget();
-
 			if (last_complite_rx_pkt_id == req_pkt_id) {
 				return;
 			}
 
 			if (true == file_rx_mode) {
 				if (req_pkt_id == file_rx_pkt_id) {
-
 					if ((byte) 0x00 == (data_in[MORE_OFFSET_4] & (byte) 0x80)) {
 						if (true == data_complite) {
 							mMainHandler.obtainMessage(
@@ -634,10 +651,6 @@ public class CarmasterUtisFragment extends Fragment {
 					data_complite = false;
 				}
 			} else { // fragment file receive continuous
-
-				// if ((byte) 0x01 != data_in[headerLen])
-				// return;
-
 				// more data
 				if ((byte) 0x80 == (data_in[MORE_OFFSET_4] & (byte) 0x80)) {
 					file_buff = new byte[totLen - headerLen];
@@ -654,7 +667,6 @@ public class CarmasterUtisFragment extends Fragment {
 							-1, file_buff).sendToTarget();
 					last_complite_rx_pkt_id = req_pkt_id;
 				}
-
 			}
 		}
 	}
@@ -693,9 +705,7 @@ public class CarmasterUtisFragment extends Fragment {
 			System.arraycopy(data_in, it, buff, 0, buff.length);
 			it += buff.length;
 			parse_obe_eid(buff);
-
 		}
-
 	}
 
 	void parse_obe_eid(byte[] data_in) {
