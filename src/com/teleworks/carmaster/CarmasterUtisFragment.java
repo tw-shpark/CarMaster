@@ -229,51 +229,6 @@ public class CarmasterUtisFragment extends Fragment {
 		}
 	};
 
-	class SocketListener extends Thread {
-		DatagramSocket socket_reciever = null;
-		DatagramPacket rx_packet;
-		int rx_port;
-
-		SocketListener(int port) {
-			rx_port = port;
-		}
-
-		public void run() {
-			byte[] buf = new byte[5000];
-			while (!Thread.interrupted()) {
-				try {
-					if (null == socket_reciever) {
-						Log.d("UDP Rx", "new DatagramSocket");
-						socket_reciever = new DatagramSocket(CNS_UDP_RX_PORT);
-						socket_reciever.setSoTimeout(2000);
-					}
-					rx_packet = new DatagramPacket(buf, buf.length);
-					socket_reciever.receive(rx_packet);
-					Log.d("UDP Rx", "Received packet");
-
-					byte[] temp = null;
-					temp = rx_packet.getData();
-
-					if (null != temp && 0 < temp.length) {
-						if (true == parsing_pending)
-							continue;
-						if ((byte) 0x55 == temp[0] && (byte) 0x54 == temp[1]
-								&& (byte) 0x49 == temp[2]
-								&& (byte) 0x53 == temp[3]) {
-							rx_obe_data(temp, rx_packet.getLength());
-						}
-					}
-
-				} catch (SocketTimeoutException e) {
-					socket_reciever.close();
-					socket_reciever = null;
-				} catch (IOException e) {
-					Log.e(getClass().getName(), e.getMessage());
-				}
-			}
-		}
-	}
-
 	public static String byteToString(byte[] bytebuf) {
 		String result = EncodingUtils.getString(bytebuf, 0, bytebuf.length,
 				"Latin-1");
@@ -303,7 +258,7 @@ public class CarmasterUtisFragment extends Fragment {
 
 	class UDP_Tx extends Thread {
 		String str;
-		String s;
+
 		String mServerIP;
 		// int sendLen;
 		byte[] mHeader = new byte[36];
@@ -413,17 +368,15 @@ public class CarmasterUtisFragment extends Fragment {
 								SET_TEXT_STATUS,
 								-1,
 								-1,
-								"UDP RECIEVE PORT : " + CNS_UDP_RX_PORT
-										+ " OBE ID : "
+								"UDP RECIEVE PORT : " + portno + " OBE ID : "
 										+ byteToHexString_noSpace(obe_id, 8))
 								.sendToTarget();
 						CNS_UDP_RX_PORT = portno;
 					}
 				}
 
-				s = byteToHexString(temp, temp.length);
-				mMainHandler.obtainMessage(SET_TEXT_CONSOLE, -1, -1, s)
-						.sendToTarget();
+				mMainHandler.obtainMessage(SET_TEXT_CONSOLE, -1, -1,
+						byteToHexString(temp, temp.length)).sendToTarget();
 			} catch (Exception e) {
 				Log.e("UDP", "C: Error", e);
 				mMainHandler.obtainMessage(SET_TEXT_STATUS, -1, -1,
@@ -467,7 +420,6 @@ public class CarmasterUtisFragment extends Fragment {
 
 	void tx_to_obe(boolean need_Req, String serverIP, String CODE,
 			String OPCODE, String FROM_TO, String[] DATA) {
-		String s;
 		// String mServerIP;
 		// int sendLen;
 		byte[] mHeader = new byte[36];
@@ -565,36 +517,72 @@ public class CarmasterUtisFragment extends Fragment {
 							SET_TEXT_STATUS,
 							-1,
 							-1,
-							"UDP RECIEVE PORT : " + CNS_UDP_RX_PORT
-									+ " OBE ID : "
+							"UDP RECIEVE PORT : " + portno + " OBE ID : "
 									+ byteToHexString_noSpace(obe_id, 8))
 							.sendToTarget();
 					CNS_UDP_RX_PORT = portno;
 				}
 			}
 
-			// s = byteToHexString(temp, temp.length);
-			// mMainHandler.obtainMessage(SET_TEXT_CONSOLE, -1, -1, s)
-			// .sendToTarget();
+			mMainHandler.obtainMessage(SET_TEXT_CONSOLE, -1, -1,
+					byteToHexString(temp, temp.length)).sendToTarget();
 		} catch (Exception e) {
 			Log.e("UDP", "C: Error", e);
 			mMainHandler.obtainMessage(SET_TEXT_STATUS, -1, -1,
 					"OBE UDP CONNECT ERROR").sendToTarget();
 		}
+	}
 
+	class SocketListener extends Thread {
+		DatagramSocket socket_reciever = null;
+		DatagramPacket rx_packet;
+		int rx_port;
+
+		SocketListener(int port) {
+			rx_port = port;
+		}
+
+		public void run() {
+			byte[] buf = new byte[5000];
+			while (!Thread.interrupted()) {
+				try {
+					if (null == socket_reciever) {
+						Log.d("UDP Rx", "new DatagramSocket");
+						socket_reciever = new DatagramSocket(CNS_UDP_RX_PORT);
+						socket_reciever.setSoTimeout(2000);
+					}
+					rx_packet = new DatagramPacket(buf, buf.length);
+					socket_reciever.receive(rx_packet);
+					Log.d("UDP Rx", "Received packet");
+
+					byte[] temp = null;
+					temp = rx_packet.getData();
+
+					if (null != temp && 0 < temp.length) {
+						if (true == parsing_pending)
+							continue;
+						if ((byte) 0x55 == temp[0] && (byte) 0x54 == temp[1]
+								&& (byte) 0x49 == temp[2]
+								&& (byte) 0x53 == temp[3]) {
+							rx_obe_data(temp, rx_packet.getLength());
+						}
+					}
+
+				} catch (SocketTimeoutException e) {
+					socket_reciever.close();
+					socket_reciever = null;
+				} catch (IOException e) {
+					Log.e(getClass().getName(), e.getMessage());
+				}
+			}
+		}
 	}
 
 	static boolean data_complite = false;
 
 	void rx_obe_data(byte[] data_in, int len) {
 
-		if ((byte) 0x1C > len)
-			return;
-
-		int headerLen = data_in[HDR_LEN_1];
-		int totLen = Byte4ToInt(data_in[TOT_LEN_4], data_in[TOT_LEN_4 + 1],
-				data_in[TOT_LEN_4 + 2], data_in[TOT_LEN_4 + 3]);
-
+		// printf
 		String s;
 		if (100 > len)
 			s = byteToHexString(data_in, len);
@@ -603,9 +591,22 @@ public class CarmasterUtisFragment extends Fragment {
 		mMainHandler.obtainMessage(SET_TEXT_CONSOLE_BC, -1, -1,
 				len + " bytes \n" + s).sendToTarget();
 
+		if ((byte) 0x24 > len)
+			return;
+
+		int headerLen = data_in[HDR_LEN_1];
+		int totLen = Byte4ToInt(data_in[TOT_LEN_4], data_in[TOT_LEN_4 + 1],
+				data_in[TOT_LEN_4 + 2], data_in[TOT_LEN_4 + 3]);
+
 		if (len < headerLen && totLen < headerLen) {
 			// size error
 			return;
+		}
+
+		// opcode
+		if ((byte) 0x20 == data_in[OPCODE_2]
+				&& (byte) 0x02 == data_in[OPCODE_2 + 1]) {
+
 		}
 
 		if (totLen == headerLen) {

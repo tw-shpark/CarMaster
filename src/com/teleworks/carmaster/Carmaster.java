@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
+import android.content.pm.ActivityInfo;
 
 public class Carmaster extends FragmentActivity {
 	private static final String SENDER_ID = "1065006683277";
@@ -43,11 +44,8 @@ public class Carmaster extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_carmaster);
 
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 		// GCM 등록여부=======================================
-		// GCMRegistrar.checkDevice(this);
-		// GCMRegistrar.checkManifest(this);
-		// GCMRegistrar.unregister(this);
-		Context context = getApplicationContext();
 		String regId = GCMRegistrar.getRegistrationId(this);
 		// 등록된 ID가 없으면 ID값을 얻어옵니다
 		if (regId.equals("") || regId == null) {
@@ -75,6 +73,7 @@ public class Carmaster extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mCarmasterPagerAdapter);
 		mViewPager.setEnabled(false);
+		mViewPager.setOffscreenPageLimit(5); // Keep all page alive
 		mViewPager
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 					@Override
