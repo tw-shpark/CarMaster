@@ -4,41 +4,20 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_vertical_margin" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/title_videoInfo"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
     <org.opencv.android.JavaCameraView
         android:id="@+id/OpenCvCameraView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView1" />
+        android:layout_width="640px"
+        android:layout_height="480px"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:id="@+id/LDWS_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignParentBottom="true"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView3"
-        android:layout_alignParentLeft="true"
-        android:text="Large Text"
+        android:layout_above="@+id/OpenCvCameraView"
+        android:layout_alignLeft="@+id/OpenCvCameraView"
+        android:text="@string/LDWS_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
