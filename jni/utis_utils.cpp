@@ -82,13 +82,13 @@ static const unsigned long crc32tab[256] = { 0x00000000, 0x77073096, 0xee0e612c,
 		0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9, 0xbdbdf21c, 0xcabac28a, 0x53b39330,
 		0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e,
 		0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b,
-		0x2d02ef8d, };
+		0x2d02ef8d };
 
 extern "C" {
 
 unsigned short crc16_ccitt(unsigned char *buf, int len);
 /* UTIS에서는 초기 crc32값은 0으로 세트하여 호출한다. */
-unsigned long calc_crc32(char *buf, int len, unsigned long crc32);
+unsigned long crc32_ccitt(unsigned char *buf, int len);
 
 JNIEXPORT jint JNICALL Java_com_teleworks_carmaster_CarmasterUtisFragment_shellCmd(
 		JNIEnv *env, jobject thiz, jstring cmdStr) {
@@ -134,6 +134,43 @@ JNIEXPORT jbyteArray JNICALL Java_com_teleworks_carmaster_CarmasterUtisFragment_
 	return result;
 }
 
+JNIEXPORT jbyteArray JNICALL Java_com_teleworks_carmaster_CarmasterUtisFragment_genCrc32(
+		JNIEnv *env, jobject thiz, jbyteArray jDataArray, jint jDataLen) {
+
+	int Arraylen = env->GetArrayLength(jDataArray);
+	jbyte * nativaBytes = env->GetByteArrayElements(jDataArray, 0);
+
+	unsigned char * cDataArray = new unsigned char[Arraylen];
+	unsigned char * returnBuffer = new unsigned char[4];
+
+	// memset(cDataArray, 0x00, Arraylen);
+	for (int i = 0; i < Arraylen; i++)
+		cDataArray[i] = (unsigned char) 0x00;
+
+	// memcpy(cDataArray, nativaBytes, Arraylen);
+	for (int i = 0; i < Arraylen; i++)
+		cDataArray[i] = nativaBytes[i];
+
+	unsigned long crc32 = crc32_ccitt((unsigned char*) cDataArray, jDataLen);
+
+	returnBuffer[0] = (unsigned char) (crc32 >> 24);
+	returnBuffer[1] = (unsigned char) (crc32 >> 16);
+	returnBuffer[2] = (unsigned char) (crc32 >> 8);
+	returnBuffer[3] = (unsigned char) crc32;
+
+	LOGI(
+			"CRC32 [%02X %02X %02X %02X]\n", returnBuffer[0], returnBuffer[1], returnBuffer[2], returnBuffer[3]);
+
+	jbyteArray result = env->NewByteArray(4);
+
+	env->SetByteArrayRegion(result, 0, 4, (jbyte*) returnBuffer);
+
+	delete[] cDataArray;
+	delete[] returnBuffer;
+
+	return result;
+}
+
 unsigned short crc16_ccitt(unsigned char *buf, int len) {
 	register int counter;
 	register unsigned short crc = 0;
@@ -143,13 +180,17 @@ unsigned short crc16_ccitt(unsigned char *buf, int len) {
 	return crc;
 }
 
-unsigned long calc_crc32(char *buf, int len, unsigned long crc32) {
-	register int counter;
-	register unsigned long crc = ~crc32;
+unsigned long crc32_ccitt(unsigned char *buf, int len) {
+	unsigned long crc32;
+	unsigned char *byteBuf;
+	int i;
 
-	for (counter = 0; counter < len; counter++)
-		crc = (crc >> 8) ^ crc32tab[(crc ^ *buf++) & 0xFF];
-
-	return ~crc;
+	/** accumulate crc32 for buffer **/
+	crc32 = 0 ^ 0xFFFFFFFF;
+	byteBuf = (unsigned char*) buf;
+	for (i = 0; i < len; i++) {
+		crc32 = (crc32 >> 8) ^ crc32tab[(crc32 ^ byteBuf[i]) & 0xFF];
+	}
+	return (crc32 ^ 0xFFFFFFFF);
 }
 }

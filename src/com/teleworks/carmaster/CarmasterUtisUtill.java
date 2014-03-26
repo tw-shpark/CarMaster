@@ -15,6 +15,8 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -80,12 +82,6 @@ public class CarmasterUtisUtill {
 			e.printStackTrace();
 		}
 		return returnStr;
-	}
-
-	public static String byteToString(byte[] bytebuf) {
-		String result = EncodingUtils.getString(bytebuf, 0, bytebuf.length,
-				"Latin-1");
-		return result;
 	}
 
 	public byte[] bitmapToByteArray(Bitmap $bitmap) {
@@ -423,4 +419,67 @@ public class CarmasterUtisUtill {
 
 	}
 
+	public static byte[] hexStringToByteArray(String s) {
+		int len = s.length();
+		byte[] data = new byte[len / 2];
+
+		for (int i = 0; i < len; i += 2) {
+			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character
+					.digit(s.charAt(i + 1), 16));
+		}
+
+		return data;
+	}
+
+	public static int Byte2ToInt(byte Byte_H, byte Byte_L) {
+		byte[] byteV = { 0, 0, Byte_H, Byte_L };
+		ByteBuffer buff = ByteBuffer.allocate(4);
+		buff = ByteBuffer.wrap(byteV);
+		buff.order(ByteOrder.BIG_ENDIAN);
+		return buff.getInt();
+	}
+
+	public static String byteToHexString_noSpace(byte[] bytebuf, int len) {
+		String result = "";
+		for (int i = 0; i < len; i++) {
+			result += String.format("%02X", bytebuf[i]);
+		}
+		return result;
+	}
+
+	public static int Byte4ToInt(byte Byte_0, byte Byte_1, byte Byte_2,
+			byte Byte_3) {
+		byte[] byteV = { Byte_0, Byte_1, Byte_2, Byte_3 };
+		ByteBuffer buff = ByteBuffer.allocate(4);
+		buff = ByteBuffer.wrap(byteV);
+		buff.order(ByteOrder.BIG_ENDIAN);
+		return buff.getInt();
+	}
+
+	public static int Byte1ToInt(byte Byte_L) {
+		byte[] byteV = { 0, 0, 0, Byte_L };
+		ByteBuffer buff = ByteBuffer.allocate(4);
+		buff = ByteBuffer.wrap(byteV);
+		buff.order(ByteOrder.BIG_ENDIAN);
+		return buff.getInt();
+	}
+
+	public static String byteToString(byte[] bytebuf) {
+		String result = EncodingUtils.getString(bytebuf, 0, bytebuf.length,
+				"Latin-1");
+		return result;
+	}
+
+	public static byte[] stringToByte(String $byteString) {
+		byte[] byteArray = EncodingUtils.getBytes($byteString, "Latin-1");
+		return byteArray;
+	}
+
+	public static String byteToHexString(byte[] bytebuf, int len) {
+		String result = "";
+		for (int i = 0; i < len; i++) {
+			result += String.format("%02X ", bytebuf[i]);
+		}
+		return result;
+	}
 }

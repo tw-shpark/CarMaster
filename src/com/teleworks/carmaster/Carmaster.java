@@ -3,6 +3,7 @@ package com.teleworks.carmaster;
 import com.google.android.gcm.GCMRegistrar;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.content.BroadcastReceiver;
@@ -29,10 +30,10 @@ public class Carmaster extends FragmentActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		// ActivityManager am = (ActivityManager) getApplicationContext()
-		// .getSystemService(Context.ACTIVITY_SERVICE);
-		// am.killBackgroundProcesses(this.getPackageName());
-		// GCMRegistrar.onDestroy(this);
+		ActivityManager am = (ActivityManager) getApplicationContext()
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		am.killBackgroundProcesses(this.getPackageName());
+		GCMRegistrar.onDestroy(this);
 	}
 
 	@Override
@@ -45,22 +46,22 @@ public class Carmaster extends FragmentActivity {
 		setContentView(R.layout.activity_carmaster);
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-		// GCM 등록여부=======================================
-		String regId = GCMRegistrar.getRegistrationId(this);
-		// 등록된 ID가 없으면 ID값을 얻어옵니다
-		if (regId.equals("") || regId == null) {
-			GCMRegistrar.register(this, SENDER_ID);
-			regId = GCMRegistrar.getRegistrationId(this);
-			Log.w("GCMRegistrar", "new regId : " + regId);
-		} else {
-			Log.w("GCMRegistrar", "Already Registered : " + regId);
-		}
-
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("com.teleworks.carmaster");
-		BroadcastReceiver receiver = new UtisBroadcastReceiver();
-		registerReceiver(receiver, intentFilter);
-		// ==================================================
+		// // GCM 등록여부=======================================
+		// String regId = GCMRegistrar.getRegistrationId(this);
+		// // 등록된 ID가 없으면 ID값을 얻어옵니다
+		// if (regId.equals("") || regId == null) {
+		// GCMRegistrar.register(this, SENDER_ID);
+		// regId = GCMRegistrar.getRegistrationId(this);
+		// Log.w("GCMRegistrar", "new regId : " + regId);
+		// } else {
+		// Log.w("GCMRegistrar", "Already Registered : " + regId);
+		// }
+		//
+		// IntentFilter intentFilter = new IntentFilter();
+		// intentFilter.addAction("com.teleworks.carmaster");
+		// BroadcastReceiver receiver = new UtisBroadcastReceiver();
+		// registerReceiver(receiver, intentFilter);
+		// // ==================================================
 
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -111,15 +112,15 @@ public class Carmaster extends FragmentActivity {
 				.setTabListener(tabListener));
 	}
 
-	private class UtisBroadcastReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Intent Intent = new Intent(Carmaster.this,
-					CarmasterUtisMsgDialog.class);
-			Intent.putExtra("gcm_msg", intent.getStringExtra("msg"));
-			startActivity(Intent);
-		}
-	}
+	// private class UtisBroadcastReceiver extends BroadcastReceiver {
+	// @Override
+	// public void onReceive(Context context, Intent intent) {
+	// Intent Intent = new Intent(Carmaster.this,
+	// CarmasterUtisMsgDialog.class);
+	// Intent.putExtra("gcm_msg", intent.getStringExtra("msg"));
+	// startActivity(Intent);
+	// }
+	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
