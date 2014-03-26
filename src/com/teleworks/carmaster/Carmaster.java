@@ -70,6 +70,8 @@ public class Carmaster extends FragmentActivity {
         actionBar.addTab(actionBar.newTab().setText("영상정보").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("응급호출").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("설정").setTabListener(tabListener));
+        
+        //actionBar.set
     }
 
 
