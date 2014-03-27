@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /*
+=======
+>>>>>>> origin/utis
 #include <jni.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -26,6 +29,7 @@ JNIEXPORT void JNICALL Java_com_teleworks_carmaster_CarmasterVideoFragment_Video
     }
 }
 }
+<<<<<<< HEAD
 */
 
 
@@ -1002,3 +1006,5 @@ JNIEXPORT void JNICALL Java_com_teleworks_carmaster_CarmasterVideoFragment_Video
 */
 }
 }
+=======
+>>>>>>> origin/utis
