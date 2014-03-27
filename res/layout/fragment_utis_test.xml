@@ -4,14 +4,152 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/text_utis_console"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/title_videoInfo"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="top|center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/text_utis_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:text="@string/title_utisInfo"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_utis_file_info"
+                android:layout_width="fill_parent"
+                android:layout_height="50dip"
+                android:layout_marginTop="35dip"
+                android:gravity="center"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_cctv"
+                android:layout_width="420dip"
+                android:layout_height="285dip"
+                android:layout_gravity="center"
+                android:background="@+drawable/ic_launcher"
+                android:paddingTop="10dip" />
+
+            <TextView
+                android:id="@+id/text_utis_message"
+                android:layout_width="400dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dip"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="0dip"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="@string/text_utis_message"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="400dip"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/text_utis_status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_utis_console_send"
+                android:layout_width="fill_parent"
+                android:layout_height="70dip"
+                android:layout_marginTop="25dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text_utis_console"
+                android:layout_width="fill_parent"
+                android:layout_height="70dip"
+                android:layout_marginTop="10dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/text_utis_console2"
+                android:layout_width="fill_parent"
+                android:layout_height="70dip"
+                android:layout_marginTop="10dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btn_0"
+                    android:layout_width="120dip"
+                    android:layout_height="wrap_content"
+                    android:text="OBE 연결" >
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_1"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:text="테스트1" >
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_2"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:text="테스트2" >
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="rndis 설정" >
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_4"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:text="ECall-Test" >
+                </Button>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
