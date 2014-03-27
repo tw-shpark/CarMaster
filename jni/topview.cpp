@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
 =======
 >>>>>>> origin/utis
@@ -330,9 +329,9 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 	uchar left_image[800][1280]={0}, right_image[800][1280]={0}, rear_image[800][1280]={0};
 	uchar Inter_right[800][1280]={0}, Inter_left[800][1280]={0}, FMM_left[800][1280]={0}, FMM_right[800][1280]={0};
 
-	double matrix_left[3][3]={{-1.415706, -0.989851, 1934.359253},{-0.223215, -1.181200, 938.850647},{0.000247, -0.001393, 1.000000}}; //1��
-	double matrix_right[3][3]={{0.863149, -0.810486, 260.209137},{-0.320579, 0.140184, 217.276901},{-0.000307, -0.000954, 1.000000}}; //1��
-	double matrix[3][3]={{1.733896, -0.920175, -458.782867 },{-0.010799, 0.260302, 65.995651},{0.000019, -0.001456, 1.000000}};//1�� ����
+	double matrix_left[3][3]={{-1.415706, -0.989851, 1934.359253},{-0.223215, -1.181200, 938.850647},{0.000247, -0.001393, 1.000000}}; //1占쏙옙
+	double matrix_right[3][3]={{0.863149, -0.810486, 260.209137},{-0.320579, 0.140184, 217.276901},{-0.000307, -0.000954, 1.000000}}; //1占쏙옙
+	double matrix[3][3]={{1.733896, -0.920175, -458.782867 },{-0.010799, 0.260302, 65.995651},{0.000019, -0.001456, 1.000000}};//1占쏙옙 占쏙옙占쏙옙
 
 	//printf("1");
 	for(i=0;i<900;i++)
@@ -382,21 +381,21 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 
 
 	int count;
-	for(j=0;j<h2;j++) //i,j�� ��� �̹����� ��ǥ
+	for(j=0;j<h2;j++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 	{
 		count=0;
 		for(i=i_st;i<i_ed;i++)
 		{
 			cc=matrix[2][0]*(i)	+(matrix[2][1])*(j)	+matrix[2][2];
 			xx=(int)(((((double)(i))*(matrix[0][0])	+((double)(j))*(matrix[0][1]))	+(matrix[0][2]))/cc);
-			yy=(int)(((((double)(i))*(matrix[1][0])	+((double)(j))*(matrix[1][1]))	+(matrix[1][2]))/cc);//xx,yy�� �� �̹����� ��ǥ.
+			yy=(int)(((((double)(i))*(matrix[1][0])	+((double)(j))*(matrix[1][1]))	+(matrix[1][2]))/cc);//xx,yy占쏙옙 占쏙옙 占싱뱄옙占쏙옙占쏙옙 占쏙옙표.
 			if(xx>=w||xx<0||yy>=h||yy<0)
 			{
 				table[0][j][i]=-1;
 				table[1][j][i]=-1;
 				continue;
 			}
-			else if(xx<rx_st*1.2*(ry_ed-yy)/ry_ed-20||xx>i_ed-rx_st*1.2*(ry_ed-yy)/ry_ed+20||yy>ry_ed||yy<ry_st) // distortion�ִ� �κ� ���� �ϱ�.
+			else if(xx<rx_st*1.2*(ry_ed-yy)/ry_ed-20||xx>i_ed-rx_st*1.2*(ry_ed-yy)/ry_ed+20||yy>ry_ed||yy<ry_st) // distortion占쌍댐옙 占싸븝옙 占쏙옙占쏙옙 占싹깍옙.
 			{
 				table[0][j][i]=-1;
 				table[1][j][i]=-1;
@@ -410,13 +409,13 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 	}
 
 	//printf("1\n");
-	for(j=j_st;j<h2;j++) //i,j�� ��� �̹����� ��ǥ
+	for(j=j_st;j<h2;j++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 	{
 		for(i=center;i<i_ed;i++)
 		{
 			cc=matrix_left[2][0]*(i)	+(matrix_left[2][1])*(j)	+matrix_left[2][2];
 			xx=(int)(((((double)(i))*(matrix_left[0][0])	+((double)(j))*(matrix_left[0][1]))	+(matrix_left[0][2]))/cc);
-			yy=(int)(((((double)(i))*(matrix_left[1][0])	+((double)(j))*(matrix_left[1][1]))	+(matrix_left[1][2]))/cc);//xx,yy�� �� �̹����� ��ǥ.
+			yy=(int)(((((double)(i))*(matrix_left[1][0])	+((double)(j))*(matrix_left[1][1]))	+(matrix_left[1][2]))/cc);//xx,yy占쏙옙 占쏙옙 占싱뱄옙占쏙옙占쏙옙 占쏙옙표.
 
 
 			if(xx>=w||xx<0||yy>=h||yy<0)
@@ -433,13 +432,13 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 		}
 	}
 
-	for(j=j_st;j<h2;j++) //i,j�� ��� �̹����� ��ǥ
+	for(j=j_st;j<h2;j++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 	{
 		for(i=i_st;i<center;i++)
 		{
 			cc=matrix_right[2][0]*i	+(matrix_right[2][1])*j	+matrix_right[2][2];
 			xx=(int)(((((double)i)*(matrix_right[0][0])	+((double)j)*(matrix_right[0][1]))	+(matrix_right[0][2]))/cc);
-			yy=(int)(((((double)i)*(matrix_right[1][0])	+((double)j)*(matrix_right[1][1]))	+(matrix_right[1][2]))/cc);//xx,yy�� �� �̹����� ��ǥ.
+			yy=(int)(((((double)i)*(matrix_right[1][0])	+((double)j)*(matrix_right[1][1]))	+(matrix_right[1][2]))/cc);//xx,yy占쏙옙 占쏙옙 占싱뱄옙占쏙옙占쏙옙 占쏙옙표.
 			if(xx>=w||xx<0||yy>=h||yy<0)
 			{
 				table_right[0][j][i]=-1;
@@ -454,13 +453,13 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 	}
 
 	//printf("adsfsaasdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaafd");
-	for(j=0;j<h2;j++) //i,j�� ��� �̹����� ��ǥ
+	for(j=0;j<h2;j++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 	{
 		for(i=i_st;i<i_ed;i++)
 		{
 
-			//if(table[0][j][i]==-1||i>739)//�Ʒ��� ��� �̰� ���� left �߽����� ��.
-			if(table[0][j][i]==-1)//rear �߽�.
+			//if(table[0][j][i]==-1||i>739)//占싣뤄옙占쏙옙 占쏙옙占� 占싱곤옙 占쏙옙占쏙옙 left 占쌩쏙옙占쏙옙占쏙옙 占쏙옙.
+			if(table[0][j][i]==-1)//rear 占쌩쏙옙.
 			{
 				if(table_left[0][j][i]==-1)
 				{
@@ -710,7 +709,7 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 		//printf("rattr %f rattg %f rattb %f\n",rattr,rattg,rattb);
 
 
-		for(i=0;i<1280;i++) //i,j�� ��� �̹����� ��ǥ
+		for(i=0;i<1280;i++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 		{
 			for(j=0;j<720;j++)
 			{
@@ -763,7 +762,7 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 		//printf("rattr %f rattg %f rattb %f",rattr,rattg,rattb);
 
 		//printf("rattr %f rattg %f rattb %f",rattr,rattg,rattb);
-		for(i=0;i<1280;i++) //i,j�� ��� �̹����� ��ǥ
+		for(i=0;i<1280;i++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 		{
 			for(j=0;j<720;j++)
 			{
@@ -789,11 +788,11 @@ void Topview(IplImage *img, IplImage *img2, IplImage *img3, IplImage *undist_img
 			}
 		}
 		printf("%d  %d\n",h2,i_ed);
-		for(j=0;j<h2;j++) //i,j�� ��� �̹����� ��ǥ
+		for(j=0;j<h2;j++) //i,j占쏙옙 占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙표
 		{
-			li1=583-(double)(j-187)*169/276;//��輱��
-			li2=729+(double)(j-187)*122/284;//��輱��
-			li3=823-(double)(j-419)*137/23;	//��輱��
+			li1=583-(double)(j-187)*169/276;//占쏙옙雍깍옙占�
+			li2=729+(double)(j-187)*122/284;//占쏙옙雍깍옙占�
+			li3=823-(double)(j-419)*137/23;	//占쏙옙雍깍옙占�
 			uchar* ptr1=(uchar*) (undist_img->imageData +j*w2*3);
 			for(i=0;i<i_ed;i++)
 			{
@@ -948,7 +947,7 @@ JNIEXPORT void JNICALL Java_com_teleworks_carmaster_CarmasterVideoFragment_Video
     }
 
 
-    // mRgb������ �ڸ��� rear, left, right�� copy
+    // mRgb占쏙옙占쏙옙占쏙옙 占쌘몌옙占쏙옙 rear, left, right占쏙옙 copy
 
     Topview(rear, left, right, result);
 
@@ -994,7 +993,7 @@ JNIEXPORT void JNICALL Java_com_teleworks_carmaster_CarmasterVideoFragment_Video
     		mRgb.at<Vec4b>(i,j)[3] = (uchar)255;
     	}
     }
-    // result �� �Ѱ������, �����??
+    // result 占쏙옙 占싼곤옙占쏙옙占쏙옙占�, 占쏘떤占쏙옙占쏙옙??
 
     cvReleaseImage(&gray);
     cvReleaseImage(&image);
@@ -1006,5 +1005,3 @@ JNIEXPORT void JNICALL Java_com_teleworks_carmaster_CarmasterVideoFragment_Video
 */
 }
 }
-=======
->>>>>>> origin/utis
