@@ -109,7 +109,7 @@
                     android:layout_width="450dip"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="서울시 강남구 삼성동"
+                    android:text="대전시 유성구 노은동 한밭대로"
                     android:textSize="20dip" >
                 </EditText>
 
@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dip"
                     android:layout_marginTop="0dip"
-                    android:text="사교유형"
+                    android:text="사고유형"
                     android:textColor="#000000"
                     android:textSize="20dip" >
                 </TextView>

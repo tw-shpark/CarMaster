@@ -133,6 +133,14 @@ public class CarmasterEmergencyFragment extends Fragment {
 				if (mCheckbox[8].isChecked()) {
 					type_act[0] += (byte) 0x04;
 				}
+
+				if ((byte) 0x00 == type_act[0] && (byte) 0x00 == type_act[1]) {
+					Toast.makeText(getActivity(),
+							String.format("응급 상황 사고 유형을 선택하십시오."),
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				String s_type_act = CarmasterUtisUtill.byteToHexString_noSpace(
 						type_act, 2);
 

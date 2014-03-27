@@ -29,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
 public class CarmasterUtisFragment extends Fragment {
@@ -56,6 +57,7 @@ public class CarmasterUtisFragment extends Fragment {
 	private static final int SET_TEXT_CONSOLE_SEND = 4;
 	private static final int SET_TEXT_UTIS_MESSAGE = 5;
 	private static final int SET_TEXT_UTIS_FILE_INFO = 6;
+	private static final int SET_TOAST_MESSAGE = 7;
 
 	// Packet opset
 	private static final int MAGIC_CODE_4 = 0;
@@ -121,18 +123,6 @@ public class CarmasterUtisFragment extends Fragment {
 
 		mCCTV_img = (ImageView) rootView.findViewById(R.id.img_cctv);
 
-		// if (null == sockThread) {
-		// sockThread = new Thread(new SocketListener(20000));
-		// sockThread.start();
-		// } else {
-		// sockThread.interrupt();
-		// sockThread = new Thread(new SocketListener(CNS_UDP_RX_PORT));
-		// sockThread.start();
-		// new Thread(new UDP_Tx(true, serverIp, "0801", "0000", "0040",
-		// new String[] { "F64100" })).start();
-		// tx_to_obe(true, serverIp, "0801", "0000", "0040",
-		// new String[] { "F64100" });
-		// }
 		new Thread(new SocketListener(CNS_UDP_RX_PORT)).start();
 
 		mButton = (Button) rootView.findViewById(R.id.btn_0);
@@ -197,6 +187,10 @@ public class CarmasterUtisFragment extends Fragment {
 			}
 		});
 
+		// 0x0000
+		CarmasterUtisUtill.doCmds("ifconfig rndis0 " + rndisIp);
+		new Thread(req_register).start();
+
 		return rootView;
 	}
 
@@ -229,6 +223,10 @@ public class CarmasterUtisFragment extends Fragment {
 				parsing_pending = true;
 				parse_obe_fragment((byte[]) msg.obj);
 				parsing_pending = false;
+				break;
+			case SET_TOAST_MESSAGE:
+				Toast.makeText(getActivity(), (String) msg.obj,
+						Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -765,6 +763,47 @@ public class CarmasterUtisFragment extends Fragment {
 		// opcode - V2V
 		if ((byte) 0x20 == data_in[OPCODE_2]
 				&& (byte) 0x02 == data_in[OPCODE_2 + 1]) {
+			byte[] temp_obeid = new byte[8];
+			System.arraycopy(data_in, 35, temp_obeid, 0, 8);
+
+			byte[] temp_type_act = { data_in[72], data_in[73] };
+			String s_type_act = "";
+			// check box
+			if (temp_type_act[1] == (byte) 0x04) {
+				s_type_act += ",차량사고";
+			}
+			if (temp_type_act[1] == (byte) 0x08) {
+				s_type_act += ",기상관련";
+			}
+			if (temp_type_act[1] == (byte) 0x10) {
+				s_type_act += ",기후-고장";
+			}
+			if (temp_type_act[1] == (byte) 0x20) {
+				s_type_act += ",화재";
+			}
+			if (temp_type_act[1] == (byte) 0x40) {
+				s_type_act += ",장애물";
+			}
+			if (temp_type_act[1] == (byte) 0x80) {
+				s_type_act += ",위험물";
+			}
+			if (temp_type_act[0] == (byte) 0x01) {
+				s_type_act += ",지진";
+			}
+			if (temp_type_act[0] == (byte) 0x02) {
+				s_type_act += ",산사태";
+			}
+			if (temp_type_act[0] == (byte) 0x04) {
+				s_type_act += ",홍수";
+			}
+
+			mMainHandler.obtainMessage(
+					SET_TOAST_MESSAGE,
+					-1,
+					-1,
+					String.format("응급상황[%s] 차량ID[%s] 부터 전송되었습니다.", s_type_act,
+							CarmasterUtisUtill.byteToHexString_noSpace(
+									temp_obeid, 8))).sendToTarget();
 
 		}
 		// opcode - media data

@@ -439,14 +439,6 @@ public class CarmasterUtisUtill {
 		return buff.getInt();
 	}
 
-	public static String byteToHexString_noSpace(byte[] bytebuf, int len) {
-		String result = "";
-		for (int i = 0; i < len; i++) {
-			result += String.format("%02X", bytebuf[i]);
-		}
-		return result;
-	}
-
 	public static int Byte4ToInt(byte Byte_0, byte Byte_1, byte Byte_2,
 			byte Byte_3) {
 		byte[] byteV = { Byte_0, Byte_1, Byte_2, Byte_3 };
@@ -479,6 +471,14 @@ public class CarmasterUtisUtill {
 		String result = "";
 		for (int i = 0; i < len; i++) {
 			result += String.format("%02X ", bytebuf[i]);
+		}
+		return result;
+	}
+
+	public static String byteToHexString_noSpace(byte[] bytebuf, int len) {
+		String result = "";
+		for (int i = 0; i < len; i++) {
+			result += String.format("%02X", bytebuf[i]);
 		}
 		return result;
 	}
