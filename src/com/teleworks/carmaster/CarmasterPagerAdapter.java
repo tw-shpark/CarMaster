@@ -33,8 +33,7 @@ public class CarmasterPagerAdapter extends
 			fragment = new CarmasterCarFragment();
 			break;
 		case VIDEO_INFO:
-			// fragment = new CarmasterVideoFragment();
-			fragment = new CarmasterCarFragment();
+			fragment = new CarmasterVideoFragment();
 			break;
 		case EMERGENCY:
 			fragment = new CarmasterEmergencyFragment();
