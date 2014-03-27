@@ -3,6 +3,7 @@ package com.teleworks.carmaster;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -27,6 +28,8 @@ public class Carmaster extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carmaster);
         
+        setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE );
+        
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         
@@ -37,6 +40,7 @@ public class Carmaster extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mCarmasterPagerAdapter);
         mViewPager.setEnabled(false);
+        mViewPager.setOffscreenPageLimit(5); // Keep all page alive
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
         	@Override
         	public void onPageSelected(int position) {
@@ -66,6 +70,8 @@ public class Carmaster extends FragmentActivity {
         actionBar.addTab(actionBar.newTab().setText("영상정보").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("응급호출").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("설정").setTabListener(tabListener));
+        
+        //actionBar.set
     }
 
 

@@ -36,3 +36,6 @@ proguard/
 # Mac OS Indexing files
 .DS_Store
 ._.DS_Store
+
+# Preference file
+.prefs
