@@ -14,17 +14,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
-public class CarmasterVideoFragment extends Fragment implements CvCameraViewListener2 {
+public class CarmasterVideoFragment extends Fragment implements CvCameraViewListener2, OnCheckedChangeListener {
 	public static final String ARG_OBJECT = "object";
 	protected static final String TAG = "VidioFragment";
 	
 	private CameraBridgeViewBase mOpenCvCameraView;
 	private Mat mRgba;
 	private Mat mGray;
+	private long selectAlgorithm;
 
+	private final static long ALGORITHM_NONE = 0;
+	private final static long ALGORITHM_LDWS = 1;
+	private final static long ALGORITHM_TOPV = 2;
+	
 	private BaseLoaderCallback  mLoaderCallback = new BaseLoaderCallback(getActivity()) {
         @Override
         public void onManagerConnected(int status) {
@@ -77,6 +84,12 @@ public class CarmasterVideoFragment extends Fragment implements CvCameraViewList
 		mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.OpenCvCameraView);
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		
+		RadioGroup algorithmGroup;
+		algorithmGroup = (RadioGroup) rootView.findViewById(R.id.algoritmSel);
+		algorithmGroup.setOnCheckedChangeListener(this);
+		
+		selectAlgorithm = ALGORITHM_NONE;
+		
 		return rootView;
 	}
 
@@ -96,9 +109,21 @@ public class CarmasterVideoFragment extends Fragment implements CvCameraViewList
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		mRgba = inputFrame.rgba();
 		mGray = inputFrame.gray();
-		VideoProcessing(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr());
+		VideoProcessing(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr(), selectAlgorithm);
 		return mRgba;
 	}
 	
-	public native void VideoProcessing(long matAddrGr, long matAddrRgba);
+	public native void VideoProcessing(long matAddrGr, long matAddrRgba, long flags);
+
+	@Override
+	public void onCheckedChanged(RadioGroup arg0, int arg1) {
+		if(arg0.getCheckedRadioButtonId() == R.id.algo_none) {
+			selectAlgorithm = ALGORITHM_NONE;
+		} else if(arg0.getCheckedRadioButtonId() == R.id.algo_ldws) {
+			selectAlgorithm = ALGORITHM_LDWS;
+		} else if (arg0.getCheckedRadioButtonId() == R. id.algo_topview) {
+			selectAlgorithm = ALGORITHM_TOPV;
+		}
+		
+	}
 }

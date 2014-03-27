@@ -4,20 +4,61 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_vertical_margin" >
 
-    <org.opencv.android.JavaCameraView
-        android:id="@+id/OpenCvCameraView"
-        android:layout_width="640px"
-        android:layout_height="480px"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
-
     <TextView
-        android:id="@+id/LDWS_title"
-        android:layout_width="match_parent"
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/OpenCvCameraView"
-        android:layout_alignLeft="@+id/OpenCvCameraView"
-        android:text="@string/LDWS_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/OpenCvCameraView"
+        android:layout_marginLeft="47dp"
+        android:layout_toRightOf="@+id/OpenCvCameraView"
+        android:text="알고리즘 선택"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
+		<RadioGroup
+		    android:id="@+id/algoritmSel"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignLeft="@+id/textView1"
+		    android:layout_alignParentRight="true"
+		    android:layout_below="@+id/textView1"
+		    android:orientation="vertical" >
+
+			<RadioButton
+			    android:id="@+id/algo_none"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="20dp"
+			    android:checked="true"
+			    android:text="없음 (일반 출력)"
+			    android:textSize="20sp" />
+
+			<RadioButton
+			    android:id="@+id/algo_ldws"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="5dp"
+			    android:text="차선 인식 알고리즘"
+			    android:textSize="20sp" />
+
+			<RadioButton
+			    android:id="@+id/algo_topview"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="5dp"
+			    android:text="Top-view 알고리즘"
+			    android:textSize="20sp" />
+
+		</RadioGroup>
+
+		<org.opencv.android.JavaCameraView
+		    android:id="@+id/OpenCvCameraView"
+		    android:layout_width="640px"
+		    android:layout_height="480px"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerVertical="true"
+		    android:layout_marginLeft="80dp" />
+		
 </RelativeLayout>
