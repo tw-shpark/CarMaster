@@ -768,42 +768,43 @@ public class CarmasterUtisFragment extends Fragment {
 
 			byte[] temp_type_act = { data_in[72], data_in[73] };
 			String s_type_act = "";
-			// check box
-			if (temp_type_act[1] == (byte) 0x04) {
-				s_type_act += ",차량사고";
+
+			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x04)) {
+				s_type_act = s_type_act + "차량사고 ";
 			}
-			if (temp_type_act[1] == (byte) 0x08) {
-				s_type_act += ",기상관련";
+			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x08)) {
+				s_type_act += "기상관련 ";
 			}
-			if (temp_type_act[1] == (byte) 0x10) {
-				s_type_act += ",기후-고장";
+			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x10)) {
+				s_type_act += "기후-고장 ";
 			}
-			if (temp_type_act[1] == (byte) 0x20) {
-				s_type_act += ",화재";
+			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x20)) {
+				s_type_act += "화재 ";
 			}
-			if (temp_type_act[1] == (byte) 0x40) {
-				s_type_act += ",장애물";
+			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x40)) {
+				s_type_act += "장애물 ";
 			}
-			if (temp_type_act[1] == (byte) 0x80) {
-				s_type_act += ",위험물";
+			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x80)) {
+				s_type_act += "위험물 ";
 			}
-			if (temp_type_act[0] == (byte) 0x01) {
-				s_type_act += ",지진";
+			if ((byte) 0x04 == (temp_type_act[0] & (byte) 0x01)) {
+				s_type_act += "지진 ";
 			}
-			if (temp_type_act[0] == (byte) 0x02) {
-				s_type_act += ",산사태";
+			if ((byte) 0x04 == (temp_type_act[0] & (byte) 0x02)) {
+				s_type_act += "산사태 ";
 			}
-			if (temp_type_act[0] == (byte) 0x04) {
-				s_type_act += ",홍수";
+			if ((byte) 0x04 == (temp_type_act[0] & (byte) 0x04)) {
+				s_type_act += "홍수 ";
 			}
 
 			mMainHandler.obtainMessage(
 					SET_TOAST_MESSAGE,
 					-1,
 					-1,
-					String.format("응급상황[%s] 차량ID[%s] 부터 전송되었습니다.", s_type_act,
-							CarmasterUtisUtill.byteToHexString_noSpace(
-									temp_obeid, 8))).sendToTarget();
+					String.format("응급상황[%s] \n차량ID[%s] 부터 전송되었습니다.",
+							s_type_act, CarmasterUtisUtill
+									.byteToHexString_noSpace(temp_obeid, 8)))
+					.sendToTarget();
 
 		}
 		// opcode - media data
