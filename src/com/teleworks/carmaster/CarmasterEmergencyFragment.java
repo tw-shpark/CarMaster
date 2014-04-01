@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
@@ -122,35 +125,35 @@ public class CarmasterEmergencyFragment extends Fragment {
 				}
 				if (mCheckbox[1].isChecked()) {
 					type_act[1] += (byte) 0x08;
-					s_type += "기상관련 ";
+					s_type += ",기상관련 ";
 				}
 				if (mCheckbox[2].isChecked()) {
 					type_act[1] += (byte) 0x10;
-					s_type += "기후/고장 ";
+					s_type += ",기후/고장 ";
 				}
 				if (mCheckbox[3].isChecked()) {
 					type_act[1] += (byte) 0x20;
-					s_type += "차량화재 ";
+					s_type += ",차량화재 ";
 				}
 				if (mCheckbox[4].isChecked()) {
 					type_act[1] += (byte) 0x40;
-					s_type += "장애물 ";
+					s_type += ",장애물 ";
 				}
 				if (mCheckbox[5].isChecked()) {
 					type_act[1] += (byte) 0x80;
-					s_type += "위험물 ";
+					s_type += ",위험물 ";
 				}
 				if (mCheckbox[6].isChecked()) {
 					type_act[0] += (byte) 0x01;
-					s_type += "지진 ";
+					s_type += ",지진 ";
 				}
 				if (mCheckbox[7].isChecked()) {
 					type_act[0] += (byte) 0x02;
-					s_type += "산사태 ";
+					s_type += ",산사태 ";
 				}
 				if (mCheckbox[8].isChecked()) {
 					type_act[0] += (byte) 0x04;
-					s_type += "홍수 ";
+					s_type += ",홍수";
 				}
 
 				if ((byte) 0x00 == type_act[0] && (byte) 0x00 == type_act[1]) {
@@ -174,11 +177,16 @@ public class CarmasterEmergencyFragment extends Fragment {
 								"F75074657374206465736372697074696F6E" }))
 						.start();
 
-				new Thread(new GsmSendThread("돌발상황발생 [" + s_type + "]",
-						"돌발상황발생 [" + s_type + "]", "차량번호 : "
-								+ mEdit_number.getText().toString()
-								+ ", 사고위치 : "
-								+ mEdit_location.getText().toString())).start();
+				String format = new String("yyyy년MM월dd일HH시mm분");
+				SimpleDateFormat sdf = new SimpleDateFormat(format,
+						Locale.KOREA);
+				String s_time = sdf.format(new Date());
+
+				new Thread(new GsmSendThread("[돌발상황발생]", "[돌발상황발생]", "사고유형 :"
+						+ s_type + "\n차량번호 : "
+						+ mEdit_number.getText().toString() + "\n사고위치 : "
+						+ mEdit_location.getText().toString() + "\n사고시간 : "
+						+ s_time)).start();
 
 				Toast.makeText(
 						getActivity(),
