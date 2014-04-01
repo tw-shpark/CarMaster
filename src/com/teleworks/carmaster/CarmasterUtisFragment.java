@@ -7,6 +7,10 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.apache.http.util.EncodingUtils;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -226,7 +230,7 @@ public class CarmasterUtisFragment extends Fragment {
 				break;
 			case SET_TOAST_MESSAGE:
 				Toast.makeText(getActivity(), (String) msg.obj,
-						Toast.LENGTH_SHORT).show();
+						Toast.LENGTH_LONG).show();
 				break;
 			}
 		}
@@ -735,7 +739,7 @@ public class CarmasterUtisFragment extends Fragment {
 
 		// printf
 		String s;
-		if (100 > len)
+		if (200 > len)
 			s = CarmasterUtisUtill.byteToHexString(data_in, len);
 		else
 			s = CarmasterUtisUtill.byteToHexString(data_in, 100);
@@ -761,50 +765,55 @@ public class CarmasterUtisFragment extends Fragment {
 		}
 
 		// opcode - V2V
-		if ((byte) 0x20 == data_in[OPCODE_2]
+		if (len > 142 && (byte) 0x20 == data_in[OPCODE_2]
 				&& (byte) 0x02 == data_in[OPCODE_2 + 1]) {
 			byte[] temp_obeid = new byte[8];
-			System.arraycopy(data_in, 35, temp_obeid, 0, 8);
+			System.arraycopy(data_in, 99, temp_obeid, 0, 8);
 
-			byte[] temp_type_act = { data_in[72], data_in[73] };
+			byte[] temp_type_act = { data_in[141], data_in[142] };
 			String s_type_act = "";
 
 			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x04)) {
-				s_type_act = s_type_act + "차량사고 ";
+				s_type_act = s_type_act + "차량사고, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x08)) {
-				s_type_act += "기상관련 ";
+			if ((byte) 0x08 == (temp_type_act[1] & (byte) 0x08)) {
+				s_type_act = s_type_act + "기상관련, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x10)) {
-				s_type_act += "기후-고장 ";
+			if ((byte) 0x10 == (temp_type_act[1] & (byte) 0x10)) {
+				s_type_act = s_type_act + "기후/고장, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x20)) {
-				s_type_act += "화재 ";
+			if ((byte) 0x20 == (temp_type_act[1] & (byte) 0x20)) {
+				s_type_act = s_type_act + "화재, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x40)) {
-				s_type_act += "장애물 ";
+			if ((byte) 0x40 == (temp_type_act[1] & (byte) 0x40)) {
+				s_type_act = s_type_act + "장애물, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[1] & (byte) 0x80)) {
-				s_type_act += "위험물 ";
+			if ((byte) 0x80 == (temp_type_act[1] & (byte) 0x80)) {
+				s_type_act = s_type_act + "위험물, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[0] & (byte) 0x01)) {
-				s_type_act += "지진 ";
+			if ((byte) 0x01 == (temp_type_act[0] & (byte) 0x01)) {
+				s_type_act = s_type_act + "지진, ";
 			}
-			if ((byte) 0x04 == (temp_type_act[0] & (byte) 0x02)) {
-				s_type_act += "산사태 ";
+			if ((byte) 0x02 == (temp_type_act[0] & (byte) 0x02)) {
+				s_type_act = s_type_act + "산사태, ";
 			}
 			if ((byte) 0x04 == (temp_type_act[0] & (byte) 0x04)) {
-				s_type_act += "홍수 ";
+				s_type_act = s_type_act + "홍수";
 			}
+
+			String format = new String("yyyyMMddHHmmss");
+			SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.KOREA);
+			String time = sdf.format(new Date());
 
 			mMainHandler.obtainMessage(
 					SET_TOAST_MESSAGE,
 					-1,
 					-1,
-					String.format("응급상황[%s] \n차량ID[%s] 부터 전송되었습니다.",
-							s_type_act, CarmasterUtisUtill
-									.byteToHexString_noSpace(temp_obeid, 8)))
-					.sendToTarget();
+					String.format(
+							"응급상황[%s] \n차량ID[%s]\n사고위치[36.3652189,127.3379818]\n사고시간["
+									+ time + "]", s_type_act,
+							CarmasterUtisUtill.byteToHexString_noSpace(
+									temp_obeid, 8))).sendToTarget();
 
 		}
 		// opcode - media data
