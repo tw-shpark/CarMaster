@@ -482,4 +482,15 @@ public class CarmasterUtisUtill {
 		}
 		return result;
 	}
+
+	public static String longToByteArrayString4(long m_long) {
+		byte[] bytes = ByteBuffer.allocate(4).putLong(m_long).array();
+		String result = "";
+		for (byte b : bytes) {
+			result += String.format("%02X", b);
+		}
+		return result;
+	}
+	// byte[] bytes = ByteBuffer.allocate(4).putInt(1695609641).array();
+	// 36.3662032,127.3212327
 }

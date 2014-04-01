@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
@@ -45,7 +48,11 @@ public class CarmasterEmergencyFragment extends Fragment {
 	// "APA91bGj2FpmthOi6q-B_ZL2nEGRe80jIsAHEv9s1VI39gRnTSb1wkodTjBEwWRC6G2zK8eb3zp-M3hiB_2BUpV0Hho7rVVLkyA6uN9Zsv6NsAM8Txnx13bapT_U8B6EPXqaF7ZO1Y7QBY8HiZl5X8UP3l4OBFSuZg";
 
 	// lg g pro
-	private String registrationId = "APA91bHUQ55h8DwDM5DgImjEkVjkWaz10KM7FG-nFU62jIHjgiGoeTLiRoZ2H-mZBtx4jdpiLJzeANGLey41E57yOW2BBufBLlxhJGXiz8zzwdYgm3Kd9di8h51RwGqPWxjfD0kWFZ69iBh_xQdPqqy3QyNmOrq1TA";
+	// private String registrationId =
+	// "APA91bHUQ55h8DwDM5DgImjEkVjkWaz10KM7FG-nFU62jIHjgiGoeTLiRoZ2H-mZBtx4jdpiLJzeANGLey41E57yOW2BBufBLlxhJGXiz8zzwdYgm3Kd9di8h51RwGqPWxjfD0kWFZ69iBh_xQdPqqy3QyNmOrq1TA";
+
+	// lg g pro
+	private String registrationId = "APA91bHU4mYu_A3nFeW-vLTd9IwIAskzRVGx9MWj9VMLsr5BMclM_q8mHFw1HO0X3Vi8NqejwmBmYQkuPqpPTCgl9-6HcujFmC_4vq7Tcumnsocjl50WOmFaYO1CgVl61BYboJBQ_NAkjoHDR_sm4ZPpVGLLy6APqg";
 
 	// UTIS
 
@@ -68,7 +75,7 @@ public class CarmasterEmergencyFragment extends Fragment {
 	private static final int EID_1 = 37;
 	private static final int SIZE_N = 38;
 
-	private EditText mEdit;
+	private EditText mEdit_number, mEdit_location;
 	private CheckBox mCheckbox[] = new CheckBox[9];
 
 	@Override
@@ -92,6 +99,10 @@ public class CarmasterEmergencyFragment extends Fragment {
 		mCheckbox[6] = (CheckBox) rootView.findViewById(R.id.chk_7);
 		mCheckbox[7] = (CheckBox) rootView.findViewById(R.id.chk_8);
 		mCheckbox[8] = (CheckBox) rootView.findViewById(R.id.chk_9);
+		mEdit_number = (EditText) rootView
+				.findViewById(R.id.edit_member_mobile);
+		mEdit_location = (EditText) rootView
+				.findViewById(R.id.edit_accident_location);
 
 		mButton = (Button) rootView.findViewById(R.id.btn_emg_location);
 		mButton.setOnClickListener(new OnClickListener() {
@@ -104,34 +115,45 @@ public class CarmasterEmergencyFragment extends Fragment {
 			public void onClick(View v) {
 				// new Thread(new GsmSendThread()).start();
 
+				String s_type = "";
+
 				byte type_act[] = { 0, 0 };
 				// check box
 				if (mCheckbox[0].isChecked()) {
 					type_act[1] += (byte) 0x04;
+					s_type += "차량사고 ";
 				}
 				if (mCheckbox[1].isChecked()) {
 					type_act[1] += (byte) 0x08;
+					s_type += ",기상관련 ";
 				}
 				if (mCheckbox[2].isChecked()) {
 					type_act[1] += (byte) 0x10;
+					s_type += ",기후/고장 ";
 				}
 				if (mCheckbox[3].isChecked()) {
 					type_act[1] += (byte) 0x20;
+					s_type += ",차량화재 ";
 				}
 				if (mCheckbox[4].isChecked()) {
 					type_act[1] += (byte) 0x40;
+					s_type += ",장애물 ";
 				}
 				if (mCheckbox[5].isChecked()) {
 					type_act[1] += (byte) 0x80;
+					s_type += ",위험물 ";
 				}
 				if (mCheckbox[6].isChecked()) {
 					type_act[0] += (byte) 0x01;
+					s_type += ",지진 ";
 				}
 				if (mCheckbox[7].isChecked()) {
 					type_act[0] += (byte) 0x02;
+					s_type += ",산사태 ";
 				}
 				if (mCheckbox[8].isChecked()) {
 					type_act[0] += (byte) 0x04;
+					s_type += ",홍수";
 				}
 
 				if ((byte) 0x00 == type_act[0] && (byte) 0x00 == type_act[1]) {
@@ -154,6 +176,18 @@ public class CarmasterEmergencyFragment extends Fragment {
 								"07487B109D4B56D03B16", "0C42" + s_type_act,
 								"F75074657374206465736372697074696F6E" }))
 						.start();
+
+				String format = new String("yyyy년MM월dd일HH시mm분");
+				SimpleDateFormat sdf = new SimpleDateFormat(format,
+						Locale.KOREA);
+				String s_time = sdf.format(new Date());
+
+				new Thread(new GsmSendThread("[돌발상황발생]", "[돌발상황발생]", "사고유형 :"
+						+ s_type + "\n차량번호 : "
+						+ mEdit_number.getText().toString() + "\n사고위치 : "
+						+ mEdit_location.getText().toString() + "\n사고시간 : "
+						+ s_time)).start();
+
 				Toast.makeText(
 						getActivity(),
 						String.format("응급 상황 코드 %02X%02X 전송되었습니다.",
@@ -165,19 +199,28 @@ public class CarmasterEmergencyFragment extends Fragment {
 	}
 
 	class GsmSendThread extends Thread {
+		String ticker = "";
+		String title = "";
+		String msg = "";
+
+		GsmSendThread(String s_ticker, String s_title, String s_msg) {
+			ticker = s_ticker;
+			title = s_title;
+			msg = s_msg;
+		}
+
 		public void run() {
-			setMessage();
+			setMessage(ticker, title, msg);
 			sendMessage();
 		}
 	}
 
-	public void setMessage() {
+	public void setMessage(String s_ticker, String s_title, String s_msg) {
 		gcmSender = new Sender(API_KEY);
 		gcmMessage = new Message.Builder().collapseKey(COLLAPSE_KEY)
 				.delayWhileIdle(DELAY_WHILE_IDLE).timeToLive(TIME_TO_LIVE)
-				.addData("ticker", "Teleworks UTIS")
-				.addData("title", "UTIS Emergency")
-				.addData("msg", "TEST MESSAGE").build();
+				.addData("ticker", s_ticker).addData("title", s_title)
+				.addData("msg", s_msg).build();
 	}
 
 	public void sendMessage() {
