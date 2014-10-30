@@ -54,7 +54,8 @@ Bugfix for Carmaster Project (OpenCV)
 * OpenCV Library - 2.4.8 Project/src/org.opencv.android/JavaCameraView.java에서 
 
 JavaCameraView.java : Line 143
-```java
+
+```
   Size frameSize = calculateCameraFrameSize(sizes, new JavaCameraSizeAccessor(), width, height);
   frameSize.width=640;
   frameSize.height=480;
